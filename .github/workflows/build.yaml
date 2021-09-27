@@ -1,0 +1,28 @@
+name: build
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v2
+
+  - name: Convert dic
+    run: ./tools/convert_dic
+
+ - name: Create a release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/**!.empty
+            dic.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
