@@ -3,20 +3,19 @@ name: build
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "ver*"
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-steps:
-  - name: Checkout
-    uses: actions/checkout@v2
+      - name: Convert dic
+        run: ./tools/convert_dic
 
-  - name: Convert dic
-    run: ./tools/convert_dic
-
- - name: Create a release
+      - name: Create a release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
@@ -25,4 +24,3 @@ steps:
             dic.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
